@@ -41,6 +41,7 @@ module.exports = function(RED) {
         this.listenactions = n.listenactions;
         this.dev = null;
         this.timeout = 1000;
+        this.timerHandle = null;
 
         this.actionHandler = (action, data, device)=>{
             var msg = {
@@ -65,7 +66,7 @@ module.exports = function(RED) {
             else{
                 this.dev = null;
                 this.status({shape:'dot',fill:'red', text:'reconnect: '+this.timeout});
-                setTimeout(()=>{this.checkConnection()}, this.timeout);
+                this.timerHandle = setTimeout(()=>{this.checkConnection()}, this.timeout);
                 this.timeout = Math.min(5*60*1000, this.timeout*2);
             }
         }
@@ -76,38 +77,40 @@ module.exports = function(RED) {
 
 
         this.on('input', function (msg) {
-            this.checkConnection()
-            try {
-                switch (msg.payload.command){
-                    case 'props':
-                        this.send({
-                            payload: {
-                                props: this.dev.properties
-                            }
-                        })
-                        break
-                    case 'call':
-                        //FIXME: get rid of such calls later
-                        try{
-                            var c = msg.payload.name;
-                            var args = msg.payload.args;
-                            if (typeof this.dev[c] === "function"){
-                                this.dev[c].apply(this.dev, args);
+            if(this.dev){
+                try {
+                    switch (msg.payload.command){
+                        case 'props':
+                            this.send({
+                                payload: {
+                                    props: this.dev.properties
+                                }
+                            })
+                            break
+                        case 'call':
+                            //FIXME: get rid of such calls later
+                            try{
+                                var c = msg.payload.name;
+                                var args = msg.payload.args;
+                                if (typeof this.dev[c] === "function"){
+                                    this.dev[c].apply(this.dev, args);
+                                }
+
+                            }catch(e){
+                                this.send({payload:{error: true, name: c, message: e}})
                             }
 
-                        }catch(e){
-                            this.send({payload:{error: true, name: c, message: e}})
-                        }
-
-                        break
+                            break
+                    }
+                } catch(err) {
+                    this.status({fill:"red",shape:"ring",text:err});
+                    this.error(err)
                 }
-            } catch(err) {
-                this.status({fill:"red",shape:"ring",text:err});
-                this.error(err)
             }
         });
 
         this.on("close", function() {
+            clearTimeout(this.timerHandle);
             if (this.dev){
                 if(this.listenactions){
                     this.dev.offAny(this.actionHandler)
