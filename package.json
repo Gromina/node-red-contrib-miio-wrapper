@@ -1,0 +1,31 @@
+{
+  "name": "red-contrib-miio-wrapper",
+  "version": "0.1.0",
+  "description": "miio library wrapper for Node-RED automation environment allows access to MiHome devices ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gromina/node-red-contrib-miio-wrapper.git"
+  },
+  "node-red": {
+    "nodes": {
+      "miio_device": "miio-wrapper/miio-wrapper.js"
+    }
+  },
+  "keywords": [
+    "miio",
+    "xiaomi",
+    "node-red",
+    "mihome",
+    "automation"
+  ],
+  "author": "Alexander Sorokin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Gromina/node-red-contrib-miio-wrapper/issues"
+  },
+  "homepage": "https://github.com/Gromina/node-red-contrib-miio-wrapper#readme"
+}
