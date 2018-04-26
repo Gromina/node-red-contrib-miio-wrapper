@@ -1,6 +1,6 @@
 {
-  "name": "red-contrib-miio-wrapper",
-  "version": "0.1.0",
+  "name": "node-red-contrib-miio-wrapper",
+  "version": "0.1.1",
   "description": "miio library wrapper for Node-RED automation environment allows access to MiHome devices ",
   "main": "index.js",
   "scripts": {
@@ -27,5 +27,8 @@
   "bugs": {
     "url": "https://github.com/Gromina/node-red-contrib-miio-wrapper/issues"
   },
-  "homepage": "https://github.com/Gromina/node-red-contrib-miio-wrapper#readme"
+  "homepage": "https://github.com/Gromina/node-red-contrib-miio-wrapper#readme",
+  "dependencies": {
+    "miio": "^0.15.6"
+  }
 }
